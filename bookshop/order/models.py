@@ -8,7 +8,7 @@ class Order(models.Model):
     total_price = models.FloatField(default=0)
 
     def save(self, *args, **kwargs):
-        for item in self.cart.books.select_related('item').all():
+        for item in self.cart.books.select_related('cart_items').all():
             book_instance = item.item
             book_instance.count -= item.count_item
             book_instance.save()

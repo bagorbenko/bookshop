@@ -1,0 +1,26 @@
+version: "3.10.9"
+
+services:
+  web:
+    build: .
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+#    volumes:
+#      - .:/bookshop
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    container_name: bookshop
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 'dbpass'
+      POSTGRES_USER: 'aliaksei'
+      POSTGRES_DB: bookshop
+      PGDATA: /Users/aliaksei/PycharmProjects/bookshop/postgres/data
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - '5432:5432'
+

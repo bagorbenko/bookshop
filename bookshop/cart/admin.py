@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Cart, ItemForCart
+from .models import Cart, CartBook
+
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
@@ -7,4 +8,4 @@ class CartAdmin(admin.ModelAdmin):
 
 
 # admin.site.register(Cart)
-admin.site.register(ItemForCart)
+admin.site.register(CartBook)

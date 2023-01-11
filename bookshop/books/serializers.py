@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import Book, BookInstance, Author
+from .models import Book, BookInstances, Author
 
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
-        fields = ('name',)
+        fields = ("name", "biography", "image")
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -20,5 +20,5 @@ class PriceSerializer(serializers.ModelSerializer):
     book = BookSerializer(many=False)
 
     class Meta:
-        model = BookInstance
+        model = BookInstances
         fields = ('price', 'book')
