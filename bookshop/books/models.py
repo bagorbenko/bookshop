@@ -29,7 +29,7 @@ class Genre(models.Model):
 class Author(models.Model):
     name = models.CharField(verbose_name="Имя", max_length=100)
     biography = models.TextField(verbose_name="Описание")
-    image = models.ImageField(verbose_name="Изображение", upload_to="media/authors/")
+    image = models.ImageField(verbose_name="Изображение", upload_to="media/authors/", blank=True)
 
     def __str__(self):
         return self.name

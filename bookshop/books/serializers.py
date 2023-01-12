@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import Book, BookInstances, Author
+from .models import *
 
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
-        fields = ("name", "biography", "image")
+        fields = "__all__"
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ('title', 'author',)
+        fields = "__all__"
 
 
 class PriceSerializer(serializers.ModelSerializer):
@@ -21,4 +21,16 @@ class PriceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BookInstances
-        fields = ('price', 'book')
+        fields = ("book", "price",)
+
+
+class PublisherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Publisher
+        fields = "__all__"
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = "__all__"
