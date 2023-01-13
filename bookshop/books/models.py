@@ -4,7 +4,7 @@ from .constants import States, Binding
 
 class Category(models.Model):
     name = models.CharField(verbose_name="Категория", max_length=150)
-    description = models.TextField(verbose_name="Описание")
+    description = models.TextField(verbose_name="Описание", blank=True)
 
     def __str__(self):
         return self.name
@@ -16,7 +16,7 @@ class Category(models.Model):
 
 class Genre(models.Model):
     name = models.CharField(verbose_name="Имя", max_length=100)
-    description = models.TextField(verbose_name="Описание")
+    description = models.TextField(verbose_name="Описание", blank=True)
 
     def __str__(self):
         return self.name
@@ -28,7 +28,7 @@ class Genre(models.Model):
 
 class Author(models.Model):
     name = models.CharField(verbose_name="Имя", max_length=100)
-    biography = models.TextField(verbose_name="Описание")
+    biography = models.TextField(verbose_name="Описание", blank=True)
     image = models.ImageField(verbose_name="Изображение", upload_to="media/authors/", blank=True)
 
     def __str__(self):
@@ -51,7 +51,6 @@ class Publisher(models.Model):
         verbose_name_plural = "Издательства"
 
 
-
 class Book(models.Model):
     title = models.CharField(verbose_name="Название", max_length=100)
     category = models.ForeignKey(Category, verbose_name="Категория", on_delete=models.SET_NULL, null=True,
@@ -59,10 +58,10 @@ class Book(models.Model):
     genres = models.ManyToManyField(Genre, verbose_name="жанры", related_name="books")
     author = models.ManyToManyField(Author, verbose_name="автор", related_name="books")
     isbn = models.CharField(verbose_name="ISBN", max_length=13, unique=True)
-    summary = models.TextField(verbose_name="Описание", max_length=1000)
+    summary = models.TextField(verbose_name="Описание", max_length=1000, blank=True)
     pages_count = models.PositiveIntegerField()
-    state = models.TextField(choices=States.choices, default=States.NEW, editable=True)
-    bind = models.TextField(choices=Binding.choices, default=Binding.SOFTCOVER, editable=True)
+    state = models.CharField(choices=States.choices, max_length=2, default=States.NEW)
+    bind = models.CharField(choices=Binding.choices, max_length=2, default=Binding.SOFTCOVER)
 
     def __str__(self):
         return self.title

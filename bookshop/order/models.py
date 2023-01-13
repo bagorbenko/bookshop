@@ -5,7 +5,7 @@ from cart.models import Cart
 class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    total_price = models.FloatField(default=0, )
+    total_price = models.FloatField(default=0)
 
     def save(self, *args, **kwargs):
         for item in self.cart.books.select_related('cart_items').all():

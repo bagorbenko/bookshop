@@ -1,12 +1,7 @@
-# from django.shortcuts import render
-# from rest_framework import generics
-# from rest_framework.response import Response
-# from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-
-from .models import Book, BookInstances, Author, Genre, Binding, Publisher
-from .serializers import BookSerializer, PriceSerializer, PublisherSerializer, GenreSerializer, AuthorSerializer
+from .models import Book, BookInstances, Author, Genre, Publisher, Category
+from .serializers import BookSerializer, PriceSerializer, PublisherSerializer, GenreSerializer, AuthorSerializer, CategorySerializer
 
 
 class BookViewSet(ModelViewSet):
@@ -33,3 +28,7 @@ class PublisherViewSet(ModelViewSet):
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
 
+
+class CategoryViewSet(ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
