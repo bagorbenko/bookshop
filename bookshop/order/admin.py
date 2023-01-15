@@ -10,8 +10,7 @@ class BookInLine(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("cart", 'date', )
-    # inlines = (BookInLine, )
+    list_display = ("id", "user", "created_at", )
 
 
 

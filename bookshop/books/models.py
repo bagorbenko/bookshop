@@ -78,7 +78,7 @@ class BookInstances(models.Model):
     count = models.PositiveIntegerField(verbose_name='Количество')
 
     def __str__(self):
-        return f'{self.book.title} - {self.publisher.name} - {self.price} - {self.count}'
+        return f'{self.book.title} - {self.publisher.name}'
 
     class Meta:
         verbose_name = "Книга Издателя"

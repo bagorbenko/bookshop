@@ -3,9 +3,15 @@ from .models import *
 
 
 class BooksAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'category', )
-    list_display_links = ('title', )
-    search_fields = ('title', 'author', )
+    list_display = ('title', 'category', 'isbn', 'pages_count', 'state', 'bind')
+    list_filter = ('category', 'genres', 'author', 'state', 'bind')
+    search_fields = ('title', 'isbn', 'summary')
+
+
+class BookInstancesAdmin(admin.ModelAdmin):
+    list_display = ('book', 'publisher', 'price', 'count')
+    list_filter = ('publisher',)
+    search_fields = ('book__title', 'publisher__name')
 
 
 admin.site.register(Category)
@@ -13,4 +19,4 @@ admin.site.register(Book, BooksAdmin)
 admin.site.register(Genre)
 admin.site.register(Author)
 admin.site.register(Publisher)
-admin.site.register(BookInstances)
+admin.site.register(BookInstances, BookInstancesAdmin)
