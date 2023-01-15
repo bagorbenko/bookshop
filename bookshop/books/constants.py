@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 class States(models.TextChoices):
     NEW = "N", _("Новая")
-    USED = "U", _("Б.У.>")
+    USED = "U", _("Б.У.")
 
 
 class Binding(models.TextChoices):
