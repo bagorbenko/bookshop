@@ -10,12 +10,14 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class CreateAccountSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
 
     class Meta:
         model = User
         fields = ('id', 'username', 'password', 'auth_token')
         read_only_fields = ('auth_token',)
         extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
