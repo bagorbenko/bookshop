@@ -71,8 +71,9 @@ class Book(models.Model):
         verbose_name_plural = "Книги"
 
 
-class BookInstances(models.Model):
-    book = models.ForeignKey(Book, verbose_name="Книга", on_delete=models.CASCADE, null=True, related_name="price")
+class BookInstance(models.Model):
+    book = models.ForeignKey(Book, verbose_name="Книга", on_delete=models.CASCADE, null=True,
+                             related_name="book_instances")
     publisher = models.ForeignKey(Publisher, verbose_name="Издательство", on_delete=models.SET_NULL, null=True)
     price = models.FloatField(verbose_name='Цена', max_length=10)
     count = models.PositiveIntegerField(verbose_name='Количество')

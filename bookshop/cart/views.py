@@ -1,14 +1,24 @@
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAdminUser
+from rest_framework import mixins, viewsets
 from .models import CartItem, Cart
 from .serializers import CartBookSerializer, CartSerializer
+from .permissions import IsOwnerOrReadOnly
 
 
-class CartViewSet(ModelViewSet):
+class CartAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
+    permission_classes = (IsOwnerOrReadOnly, )
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        queryset = Cart.objects.all()
+        if self.request.user.is_authenticated:
+            queryset = queryset.filter(user=self.request.user)
+        return queryset
 
 
-class CartBookViewSet(ModelViewSet):
+class CartBookAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = CartItem.objects.all()
     serializer_class = CartBookSerializer

@@ -1,22 +1,22 @@
 from django.db import models
 from user.models import User
-from books.models import BookInstances
+from books.models import BookInstance
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
 class CartItem(models.Model):
-    book_instance = models.ForeignKey(BookInstances, on_delete=models.CASCADE, related_name="book_instance")
-    cart = models.ForeignKey('Cart', on_delete=models.CASCADE, related_name="items")
-    quantity = models.IntegerField()
+    book_instance = models.ForeignKey(BookInstance, on_delete=models.CASCADE, related_name="book_instance")
+    cart = models.ForeignKey('Cart', on_delete=models.CASCADE, related_name="cart_items")
+    count = models.IntegerField()
     price = models.DecimalField(decimal_places=2, max_digits=10, default=0, editable=False)
 
     def get_total_price(self):
-        self.price = self.book_instance.price * self.quantity
+        self.price = self.book_instance.price * self.count
         return self.price
 
     def __str__(self):
-        return f'{self.quantity} шт. книги {self.book_instance.book.title} {self.get_total_price()}'
+        return f'{self.count} шт. книги {self.book_instance.book.title} {self.get_total_price()}'
 
 
 class Cart(models.Model):
@@ -26,11 +26,11 @@ class Cart(models.Model):
     total_price = models.DecimalField(decimal_places=2, max_digits=10, default=0, editable=False)
 
     def total_items(self):
-        return self.items.count()
+        return self.cart_items.count()
 
     def update_total_price(self):
         total_price = 0
-        for item in self.items.all():
+        for item in self.cart_items.all():
             total_price += item.get_total_price()
         self.total_price = total_price
         self.save()
@@ -47,3 +47,6 @@ class Cart(models.Model):
         if created:
             Cart.objects.create(user=instance)
 
+    @property
+    def delete(self):
+        self.cart_items.all().delete()

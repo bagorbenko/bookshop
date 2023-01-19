@@ -1,14 +1,20 @@
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import AllowAny
+from rest_framework import views, status, mixins, viewsets
 from .models import User
-from .serializers import AccountSerializer, CreateAccountSerializer
+from .serializers import AccountSerializer, RegistrationSerializer
+from rest_framework.response import Response
 
 
-class UserViewSet(ModelViewSet):
+class UserAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = AccountSerializer
 
-    def create(self, request, *args, **kwargs):
-        self.serializer_class = CreateAccountSerializer
-        self.permission_classes = (AllowAny, )
-        return super(UserViewSet, self).create(request, *args, **kwargs)
+
+class RegistrationAPIView(views.APIView):
+    """Handle user registration"""
+    serializer_class = RegistrationSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)

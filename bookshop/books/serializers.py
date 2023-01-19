@@ -1,6 +1,4 @@
 from rest_framework import serializers
-from rest_framework.relations import RelatedField
-
 from .models import *
 
 
@@ -17,23 +15,22 @@ class PublisherSerializer(serializers.ModelSerializer):
 
 
 class BookInstanceSerializer(serializers.ModelSerializer):
-    # publisher = RelatedField(queryset=Publisher.objects.all())
     publisher = serializers.CharField(source='publisher.name')
 
     class Meta:
-        model = BookInstances
+        model = BookInstance
         fields = ('publisher', 'count')
 
 
 class BookSerializer(serializers.ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(queryset=Author.objects.all(), many=True)
-    book_instances = BookInstanceSerializer(many=True, read_only=True, source='price')
+    book_instances = BookInstanceSerializer(many=True, read_only=True)
     total_amount = serializers.SerializerMethodField()
 
     def get_total_amount(self, instance):
         result = 0
-        for price in instance.price.all():
-            result += price.count
+        for book_instances in instance.book_instances.all():
+            result += book_instances.count
         return result
 
 
@@ -46,7 +43,7 @@ class PriceSerializer(serializers.ModelSerializer):
     book = BookSerializer(many=False)
 
     class Meta:
-        model = BookInstances
+        model = BookInstance
         fields = ("book", "price",)
 
 
