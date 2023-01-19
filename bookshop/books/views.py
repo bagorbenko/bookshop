@@ -1,35 +1,33 @@
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAdminUser, AllowAny
-from .permissions import CustomPermissionMixin
-from .models import Book, BookInstances, Author, Genre, Publisher, Category
+from rest_framework import mixins, viewsets
+from .models import Book, BookInstance, Author, Genre, Publisher, Category
 from .serializers import BookSerializer, BookInstanceSerializer, PublisherSerializer, GenreSerializer, AuthorSerializer, CategorySerializer
 
 
-class BookViewSet(CustomPermissionMixin, ModelViewSet):
+class BookAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
 
-class BookInstanceViewSet(CustomPermissionMixin, ModelViewSet):
-    queryset = BookInstances.objects.all()
+class BookInstanceAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = BookInstance.objects.all()
     serializer_class = BookInstanceSerializer
 
 
-class AuthorViewSet(CustomPermissionMixin, ModelViewSet):
+class AuthorAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
 
 
-class GenreViewSet(CustomPermissionMixin, ModelViewSet):
+class GenreAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
 
-class PublisherViewSet(CustomPermissionMixin, ModelViewSet):
+class PublisherAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
 
 
-class CategoryViewSet(CustomPermissionMixin, ModelViewSet):
+class CategoryAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
