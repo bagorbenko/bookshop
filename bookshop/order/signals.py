@@ -1,8 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Order
-from cart.models import CartItem, Cart
-from books.models import BookInstance
 
 
 @receiver(post_save, sender=Order)

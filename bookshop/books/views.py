@@ -1,6 +1,8 @@
+from books.models import Author, Book, BookInstance, Category, Genre, Publisher
+from books.serializers import (AuthorSerializer, BookInstanceSerializer,
+                               BookSerializer, CategorySerializer,
+                               GenreSerializer, PublisherSerializer)
 from rest_framework import mixins, viewsets
-from .models import Book, BookInstance, Author, Genre, Publisher, Category
-from .serializers import BookSerializer, BookInstanceSerializer, PublisherSerializer, GenreSerializer, AuthorSerializer, CategorySerializer
 
 
 class BookAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
