@@ -1,15 +1,13 @@
-from django.contrib import admin
-from django.contrib.auth import login
-from django.http import HttpResponse
-from django.urls import path, include, re_path
-from rest_framework.routers import DefaultRouter
-from books.views import *
+from books.views import (AuthorAPIView, BookAPIView, BookInstanceAPIView,
+                         CategoryAPIView, GenreAPIView, PublisherAPIView)
 from cart.views import CartAPIView, CartBookAPIView
-from user.models import User
-from user.views import UserAPIView, RegistrationAPIView
+from django.contrib import admin
+from django.urls import include, path, re_path
 from order.views import OrderAPIView
-from .yasg import urlpatterns as doc_urls
+from rest_framework.routers import DefaultRouter
+from user.views import RegistrationAPIView, UserAPIView
 
+from .yasg import urlpatterns as doc_urls
 
 router = DefaultRouter()
 router.register(r'books', BookAPIView, basename="books")

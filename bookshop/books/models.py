@@ -57,7 +57,7 @@ class Book(models.Model):
                                  related_name="books")
     genres = models.ManyToManyField(Genre, verbose_name="жанры", related_name="books")
     author = models.ManyToManyField(Author, verbose_name="автор", related_name="books")
-    isbn = models.CharField(verbose_name="ISBN", max_length=13, unique=True)
+    isbn = models.PositiveIntegerField(verbose_name="isbn", max_length=13, unique=True)
     summary = models.TextField(verbose_name="Описание", max_length=1000, blank=True)
     pages_count = models.PositiveIntegerField()
     state = models.CharField(choices=States.choices, max_length=2, default=States.NEW)
