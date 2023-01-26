@@ -1,5 +1,5 @@
 from factory.django import DjangoModelFactory
-from books.models import Book
+from books.models import Book, Author
 
 
 class BookFactory(DjangoModelFactory):
@@ -9,3 +9,10 @@ class BookFactory(DjangoModelFactory):
     title = "Test Book"
     isbn = 123423211
     pages_count = 123
+
+
+class AuthorsFactory(DjangoModelFactory):
+    class Meta:
+        model = Author
+
+    name = "John Dorian"
