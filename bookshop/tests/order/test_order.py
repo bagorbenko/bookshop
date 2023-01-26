@@ -1,9 +1,6 @@
-import json
 import pytest
-from django.urls import reverse
 from rest_framework import status
 
-from books.models import BookInstance
 from cart.models import CartItem, Cart
 from order.models import Order
 from tests.order.factories import UserFactory, CartFactory, CartItemFactory, OrderFactory
@@ -15,7 +12,7 @@ def test_cart_items_delete_after_order_creation(api_client):
     cart = user.cart
     cart_item = CartItemFactory(cart=cart, count=2)
     assert CartItem.objects.count() == 1
-    url = "/api/orders/"
+    url = f"/api/orders/"
     data = {
         "user": user.id,
         "cart": cart.id
@@ -32,7 +29,7 @@ def test_cart_items_delete_after_order_creation(api_client):
 def test_user_can_see_their_own_orders(api_client):
     user = UserFactory()
     cart = user.cart
-    order = OrderFactory(cart=cart)
+    order = OrderFactory(cart=cart, user=user)
     api_client.force_authenticate(user=user)
     response = api_client.get('/api/orders/')
     assert response.status_code == status.HTTP_200_OK
@@ -40,3 +37,6 @@ def test_user_can_see_their_own_orders(api_client):
     assert response.data[0]['id'] == order.id
     assert 'created_at' in response.data[0]
     assert 'updated_at' in response.data[0]
+    assert 'total_price' in response.data[0]
+    assert response.data[0]['user'] == user.id
+    assert response.data[0]['cart'] == cart.id

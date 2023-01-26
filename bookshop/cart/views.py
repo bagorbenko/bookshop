@@ -1,13 +1,13 @@
 from rest_framework import mixins, viewsets
 from .models import CartItem, Cart
-from .serializers import CartBookSerializer, CartSerializer
+from .serializers import CartItemSerializer, CartSerializer
 from .permissions import IsOwnerOrReadOnly
 
 
 class CartAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-    permission_classes = (IsOwnerOrReadOnly, )
+    permission_classes = (IsOwnerOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -19,6 +19,6 @@ class CartAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
         return queryset
 
 
-class CartBookAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
+class CartItemAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = CartItem.objects.all()
-    serializer_class = CartBookSerializer
+    serializer_class = CartItemSerializer

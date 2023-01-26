@@ -1,6 +1,7 @@
 import pytest
 from rest_framework.test import APIClient
 
+from books.models import Category, Genre, Author, Publisher, Book, BookInstance
 from cart.models import Cart, CartItem
 from order.models import Order
 from user.models import User
@@ -35,7 +36,8 @@ def book_data():
         "state": "N",
         "bind": "S",
     }
-#
+
+
 @pytest.fixture
 def cart_data():
     return {
@@ -76,3 +78,15 @@ def order_data(cart_data):
 @pytest.fixture
 def order(order_data):
     return Order.objects.create(**order_data)
+
+
+@pytest.fixture
+def create_objects():
+    category = Category.objects.create(name="category1", description="description1")
+    genre = Genre.objects.create(name="genre1", description="description1")
+    author = Author.objects.create(name="author1", biography="biography1")
+    publisher = Publisher.objects.create(name="publisher1", description="description1")
+    book = Book.objects.create(title="book1", category=category, isbn="1234567890123", pages_count=100)
+    book.genres.add(genre)
+    book.author.add(author)
+    book_instance = BookInstance.objects.create(book=book, publisher=publisher, price=10, count=5)

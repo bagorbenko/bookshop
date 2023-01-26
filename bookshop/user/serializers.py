@@ -2,11 +2,17 @@ from rest_framework import serializers
 from .models import User
 
 
-class AccountSerializer(serializers.ModelSerializer):
+class UserSerializerBS(serializers.ModelSerializer):
+    current_password = serializers.CharField(required=True)
+
     class Meta:
         model = User
-        fields = ("id", "username",)
+        fields = ('id', 'username', 'email', 'current_password', 'new_password',)
+        extra_kwargs = {
+            'new_password': {'write_only': True},
+        }
         read_only_fields = ('username',)
+        allow_delete = True
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
