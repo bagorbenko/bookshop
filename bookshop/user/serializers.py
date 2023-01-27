@@ -3,14 +3,10 @@ from .models import User
 
 
 class UserSerializerBS(serializers.ModelSerializer):
-    current_password = serializers.CharField(required=True)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'current_password', 'new_password',)
-        extra_kwargs = {
-            'new_password': {'write_only': True},
-        }
+        fields = ('id', 'username', 'email')
         read_only_fields = ('username',)
         allow_delete = True
 

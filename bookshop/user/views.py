@@ -1,7 +1,5 @@
-from django.http import JsonResponse
 from django.shortcuts import redirect
 from rest_framework import views, status, mixins, viewsets
-from rest_framework.generics import get_object_or_404
 
 from .models import User
 from .permissions import IsUserOrReadOnly
@@ -9,7 +7,7 @@ from .serializers import UserSerializerBS, RegistrationSerializer
 from rest_framework.response import Response
 
 
-class UserAPIView(mixins.ListModelMixin, viewsets.GenericViewSet, mixins.DestroyModelMixin):
+class UserAPIView(mixins.ListModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializerBS
     permission_classes = (IsUserOrReadOnly,)
