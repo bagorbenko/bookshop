@@ -9,5 +9,4 @@ class IsUserOrReadOnly(permissions.BasePermission):
             return True
         elif request.method == 'DELETE' and obj.pk == request.user.pk:
             return True
-        else:
-            return False
+        return False

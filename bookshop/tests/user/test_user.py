@@ -44,3 +44,14 @@ class TestsUser:
         assert response.data['email'] == new_email
         user.refresh_from_db()
         assert user.email == new_email
+
+    def test_user_can_reset_username(self, api_client):
+        user = UserFactory()
+        api_client.force_authenticate(user=user)
+        new_username = 'new_username'
+        current_password = user.password
+        response = api_client.patch(f'/api/auth/users/{user.id}/reset_username/',
+                                    {'username': new_username, 'current_password': current_password})
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['username'] == new_username
+        assert User.objects.filter(username=new_username).exists()
