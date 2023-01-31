@@ -2,15 +2,20 @@ from django.shortcuts import redirect
 from rest_framework import views, status, mixins, viewsets
 
 from .models import User
-from .permissions import IsUserOrReadOnly
-from .serializers import UserSerializerBS, RegistrationSerializer
+from .permissions import IsOwnProfile
+from .serializers import UserBaseSerializer, RegistrationSerializer
 from rest_framework.response import Response
 
 
-class UserAPIView(mixins.ListModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class UserAPIView(mixins.ListModelMixin,
+                  mixins.UpdateModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.DestroyModelMixin,
+                  viewsets.GenericViewSet,
+                  ):
     queryset = User.objects.all()
-    serializer_class = UserSerializerBS
-    permission_classes = (IsUserOrReadOnly,)
+    serializer_class = UserBaseSerializer
+    permission_classes = [IsOwnProfile, ]
 
 
 class RegistrationAPIView(views.APIView):

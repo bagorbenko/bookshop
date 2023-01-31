@@ -4,7 +4,10 @@ from .serializers import CartItemSerializer, CartSerializer
 from .permissions import IsOwnerOrReadOnly
 
 
-class CartAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
+class CartAPIView(mixins.ListModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
+                  viewsets.GenericViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
     permission_classes = (IsOwnerOrReadOnly,)
@@ -19,6 +22,10 @@ class CartAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
         return queryset
 
 
-class CartItemAPIView(mixins.ListModelMixin, viewsets.GenericViewSet):
+class CartItemAPIView(mixins.ListModelMixin,
+                      mixins.CreateModelMixin,
+                      mixins.UpdateModelMixin,
+                      mixins.RetrieveModelMixin,
+                      viewsets.GenericViewSet):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer

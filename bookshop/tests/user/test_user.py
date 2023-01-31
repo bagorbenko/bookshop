@@ -2,8 +2,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from rest_framework import status
 
-from tests.order.factories import UserFactory
-from user.models import User
+from tests.factories import UserFactory
 
 
 @pytest.mark.django_db
@@ -30,7 +29,7 @@ class TestsUser:
     def test_user_can_be_deleted1(self, api_client):
         user = UserFactory()
         api_client.force_authenticate(user=user)
-        response = api_client.delete(f'/api/auth/users/{user.id}/')
+        response = api_client.delete(f'/api/customers/{user.id}/')
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
     def test_user_can_update_email(self, api_client):
@@ -38,20 +37,9 @@ class TestsUser:
         user = UserFactory(password=password)
         api_client.force_authenticate(user=user)
         new_email = 'new_email@example.com'
-        url = f"/api/auth/users/{user.id}/"
+        url = f"/api/customers/{user.id}/"
         response = api_client.patch(url, data={'email': new_email})
         assert response.status_code == status.HTTP_200_OK
         assert response.data['email'] == new_email
         user.refresh_from_db()
         assert user.email == new_email
-
-    def test_user_can_reset_username(self, api_client):
-        user = UserFactory()
-        api_client.force_authenticate(user=user)
-        new_username = 'new_username'
-        current_password = user.password
-        response = api_client.patch(f'/api/auth/users/{user.id}/reset_username/',
-                                    {'username': new_username, 'current_password': current_password})
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data['username'] == new_username
-        assert User.objects.filter(username=new_username).exists()

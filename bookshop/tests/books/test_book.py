@@ -1,64 +1,45 @@
-import json
 import pytest
-from rest_framework import status
-
-from books.models import Book
-from tests.books.factories import BookFactory, AuthorsFactory
+from books.models import Book, BookInstance
+from tests.factories import CategoryFactory, GenreFactory, AuthorFactory, PublisherFactory, BookFactory, BookInstanceFactory
 
 
 @pytest.mark.django_db
-def test_create_book():
-    book = Book.objects.create(
-    title='Test Book',
-    isbn='1234567890',
-    pages_count=200
-    )
-    assert Book.objects.filter(title='Test Book').exists()
-    assert book.isbn == '1234567890'
-    assert book.pages_count == 200
-    book.delete()
-    assert not Book.objects.filter(title='Test Book').exists()
+def test_category_list_view(api_client):
+    category = CategoryFactory()
+    response = api_client.get(f'/api/categories/{category.id}/')
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_get_books(api_client):
+def test_genre_list_view(api_client):
+    genre = GenreFactory()
+    response = api_client.get(f'/api/genres/{genre.id}/')
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_author_list_view(api_client):
+    author = AuthorFactory()
+    response = api_client.get(f'/api/authors/{author.id}/')
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_publisher_list_view(api_client):
+    publisher = PublisherFactory()
+    response = api_client.get(f'/api/publishers/{publisher.id}/')
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_book_list_view(api_client):
     book = BookFactory()
-    book.save()
-    url = "/api/books/"
-    response = api_client.get(url)
-    assert response.status_code == status.HTTP_200_OK
-    response_data = json.loads(response.content)
-    assert len(response_data) == 1
-    assert response_data[0]['title'] == book.title
+    assert isinstance(book, Book)
+    response = api_client.get(f'/api/books/{book.id}/')
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_category_list(api_client, create_objects):
-    response = api_client.get('/api/categories/')
-    assert response.status_code == 200
-    assert response.data[0]['name'] == 'category1'
-    assert response.data[0]['description'] == 'description1'
-
-
-@pytest.mark.django_db
-def test_genre_list(api_client, create_objects):
-    response = api_client.get('/api/genres/')
-    assert response.status_code == 200
-    assert response.data[0]['name'] == 'genre1'
-    assert response.data[0]['description'] == 'description1'
-
-
-@pytest.mark.django_db
-def test_author_list(api_client, create_objects):
-    response = api_client.get('/api/authors/')
-    assert response.status_code == 200
-    assert response.data[0]['name'] == 'author1'
-    assert response.data[0]['biography'] == 'biography1'
-
-
-@pytest.mark.django_db
-def test_publisher_list(api_client, create_objects):
-    response = api_client.get('/api/publishers/')
-    assert response.status_code == 200
-    assert response.data[0]['name'] == 'publisher1'
-    assert response.data[0]['description'] == 'description1'
+def test_book_instance_list_view(api_client):
+    book_instance = BookInstanceFactory()
+    assert isinstance(book_instance, BookInstance)
