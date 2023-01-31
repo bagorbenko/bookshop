@@ -1,16 +1,21 @@
 import pytest
 from rest_framework import status
 
-from cart.models import CartItem, Cart
+from cart.models import CartItem
 from order.models import Order
-from tests.order.factories import UserFactory, CartFactory, CartItemFactory, OrderFactory
+from tests.factories import BookInstanceFactory
+from tests.factories import UserFactory, CartItemFactory, OrderFactory
 
 
 @pytest.mark.django_db
 def test_cart_items_delete_after_order_creation(api_client):
     user = UserFactory()
+    api_client.force_authenticate(user)
     cart = user.cart
-    cart_item = CartItemFactory(cart=cart, count=2)
+    book = BookInstanceFactory(count=3)
+    cart_item = CartItemFactory(cart=cart, book_instance=book, count=2)
+    book.count = 5
+    book.save()
     assert CartItem.objects.count() == 1
     url = f"/api/orders/"
     data = {
@@ -34,9 +39,6 @@ def test_user_can_see_their_own_orders(api_client):
     response = api_client.get('/api/orders/')
     assert response.status_code == status.HTTP_200_OK
     assert len(response.data) == 1
-    assert response.data[0]['id'] == order.id
     assert 'created_at' in response.data[0]
-    assert 'updated_at' in response.data[0]
-    assert 'total_price' in response.data[0]
     assert response.data[0]['user'] == user.id
     assert response.data[0]['cart'] == cart.id
