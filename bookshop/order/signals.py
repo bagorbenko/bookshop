@@ -14,3 +14,10 @@ def update_book_instance(sender, instance, **kwargs):
 @receiver(post_save, sender=Order)
 def clear_cart(sender, instance, **kwargs):
     instance.cart.delete
+
+
+@receiver(post_save, sender=Order)
+def update_cart_total_price(sender, instance, created, **kwargs):
+    if created:
+        cart = instance.cart
+        cart.update_total_price()

@@ -2,9 +2,8 @@ import pytest
 from django.contrib.auth import get_user_model
 from rest_framework import status
 
-from cart.models import Cart
 from tests.factories import BookInstanceFactory
-from tests.factories import UserFactory, CartItemFactory
+from tests.factories import UserFactory
 
 
 @pytest.mark.django_db
@@ -27,14 +26,28 @@ class TestsCart:
         api_client.force_authenticate(user)
         cart = user.cart
         book = BookInstanceFactory(count=3)
-        cart_item = CartItemFactory(cart=cart, book_instance=book, count=2)
         response = api_client.post(
-            f"{self.endpoint_cart}/{user.id}",
-            data={'cart_item_id': cart_item.id},
+            f"/api/cart_items/",
+            data={"count": book.count,
+                  "book_instance": book.id,
+                  "cart": cart.id},
             format='json'
         )
         assert response.status_code == status.HTTP_201_CREATED
-        assert response.data['cart_item_id'] == cart_item.id
-        assert response.data['count'] == 1
-        assert Cart.objects.get(id=cart.id).books.count() == 1
+
+    def test_add_book_to_cart_with_more_books_than_in_store(self, api_client):
+        user = UserFactory()
+        api_client.force_authenticate(user)
+        cart = user.cart
+        book = BookInstanceFactory(count=3)
+        response = api_client.post(
+            f"/api/cart_items/",
+            data={"count": book.count + 1,
+                  "book_instance": book.id,
+                  "cart": cart.id},
+            format='json'
+        )
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "Недостаточно книг в магазине" in response.data["count"]
+
 
