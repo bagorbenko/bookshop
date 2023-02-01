@@ -1,4 +1,6 @@
 from django.db import models
+from rest_framework import exceptions
+
 from user.models import User
 from books.models import BookInstance
 from django.db.models.signals import post_save
@@ -15,8 +17,15 @@ class CartItem(models.Model):
         self.price = self.book_instance.price * self.count
         return self.price
 
+    def save(self, *args, **kwargs):
+        if self.count > self.book_instance.count:
+            raise exceptions.ValidationError({"count": "Недостаточно книг в магазине"})
+        self.price = self.book_instance.price * self.count
+        super(CartItem, self).save(*args, **kwargs)
+        self.cart.update_total_price()
+
     def __str__(self):
-        return f'{self.count} шт. книги {self.book_instance.book.title} {self.get_total_price()}'
+        return f'{self.count} шт. книги {self.book_instance.book.title} по цене {self.price}'
 
 
 class Cart(models.Model):
@@ -36,7 +45,7 @@ class Cart(models.Model):
         self.save()
 
     def __str__(self):
-        return f'Корзина пользователя {self.user.username} {self.update_total_price()}'
+        return f'Корзина пользователя {self.user.username}'
 
     class Meta:
         verbose_name = "Корзина"

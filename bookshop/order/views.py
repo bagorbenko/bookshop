@@ -5,7 +5,6 @@ from cart.permissions import IsOwnerOrReadOnly
 from .models import Order
 from .serializers import OrderSerializer
 
-
 class OrderAPIView(mixins.ListModelMixin,
                    mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
@@ -28,5 +27,10 @@ class OrderAPIView(mixins.ListModelMixin,
 
     def perform_create(self, serializer):
         cart = self.request.user.cart
-        serializer.save(cart=cart)
+        total_price = 0
+        for item in cart.cart_items.all():
+            total_price += item.price
+        serializer.save(cart=cart, total_price=total_price)
         cart.cart_items.all().delete()
+        cart.total_price = 0
+        cart.save()

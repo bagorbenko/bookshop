@@ -16,7 +16,7 @@ router.register(r'genres', GenreAPIView, basename="genres")
 router.register(r'publishers', PublisherAPIView, basename="publishers")
 router.register(r'categories', CategoryAPIView, basename="categories")
 router.register(r'carts', CartAPIView, basename="carts")
-router.register(r'cartitems', CartItemAPIView, basename="cartitems")
+router.register(r'cart_items', CartItemAPIView, basename="cartitems")
 router.register(r'customers', UserAPIView, basename="customers")
 router.register(r'orders', OrderAPIView, basename="orders")
 

@@ -14,10 +14,18 @@ class Order(models.Model):
     def __str__(self):
         return f'Заказ {self.pk} для пользователя {self.user.first_name}'
 
+    def calculate_total_price(self):
+        items = self.cart.cart_items.all()
+        total_price = 0
+        for item in items:
+            total_price += item.count * item.book_instance.price
+        return total_price
+
     def save(self, *args, **kwargs):
         for item in self.cart.cart_items.all():
             if item.book_instance.count < item.count:
-                raise ValueError("Not enough books in stock")
+                raise ValueError("Не хватает книг в магазине")
+        self.total_price = self.calculate_total_price()
         super().save(*args, **kwargs)
         for item in self.cart.cart_items.all():
             item.book_instance.count -= item.count
