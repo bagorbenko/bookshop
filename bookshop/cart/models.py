@@ -55,7 +55,3 @@ class Cart(models.Model):
     def create_cart(sender, instance, created, **kwargs):
         if created:
             Cart.objects.create(user=instance)
-
-    @property
-    def delete(self):
-        self.cart_items.all().delete()

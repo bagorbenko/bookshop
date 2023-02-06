@@ -1,7 +1,7 @@
 import pytest
 from rest_framework import status
 
-from cart.models import CartItem
+from cart.models import CartItem, Cart
 from order.models import Order
 from tests.factories import BookInstanceFactory
 from tests.factories import UserFactory, CartItemFactory, OrderFactory
@@ -27,7 +27,7 @@ def test_cart_items_delete_after_order_creation(api_client):
     assert CartItem.objects.count() == 0
     assert Order.objects.count() == 1
     assert Order.objects.filter(user=user, cart=cart).exists()
-    assert CartItem.objects.count() == 0
+    assert Cart.total_price == 0
 
 
 @pytest.mark.django_db
