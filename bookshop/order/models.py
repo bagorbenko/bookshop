@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 
 from cart.models import Cart
 from user.models import User
@@ -21,6 +21,8 @@ class Order(models.Model):
             total_price += item.count * item.book_instance.price
         return total_price
 
+
+    @transaction.atomic
     def save(self, *args, **kwargs):
         for item in self.cart.cart_items.all():
             if item.book_instance.count < item.count:
@@ -31,7 +33,9 @@ class Order(models.Model):
             item.book_instance.count -= item.count
             item.book_instance.save()
             item.delete()
-
+        self.cart.cart_items.all().delete()
+        self.cart.update_total_price()
+        self.cart.save()
 
     class Meta:
         verbose_name = "Заказ"
