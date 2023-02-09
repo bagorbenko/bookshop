@@ -1,6 +1,5 @@
-from django.db import transaction
+import requests
 from rest_framework import mixins, viewsets, status
-from rest_framework.response import Response
 
 from cart.permissions import IsOwnerOrReadOnly
 from .models import Order
@@ -19,3 +18,4 @@ class OrderAPIView(mixins.ListModelMixin,
     def get_queryset(self):
         user = self.request.user
         return Order.objects.filter(user=user.id)
+
