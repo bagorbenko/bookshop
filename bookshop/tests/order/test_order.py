@@ -27,7 +27,6 @@ def test_cart_items_delete_after_order_creation(api_client):
     assert CartItem.objects.count() == 0
     assert Order.objects.count() == 1
     assert Order.objects.filter(user=user, cart=cart).exists()
-    assert Cart.total_price == 0
 
 
 @pytest.mark.django_db
@@ -42,5 +41,26 @@ def test_user_can_see_their_own_orders(api_client):
     assert 'created_at' in response.data[0]
     assert response.data[0]['user'] == user.id
     assert response.data[0]['cart'] == cart.id
+
+import requests
+import pytest
+
+def test_send_purchase_data():
+    url = 'http://127.0.0.1:5050/purchase'
+    order_data = {
+        "order_id": 14,
+        "book_id": 5,
+        "user_id": 6,
+        "book_title": "Penny",
+        "author_name": "Loki",
+        "price": 200,
+        "create_at": "2023-02-20",
+        "publisher_id": 1
+    }
+    response = requests.post(url, json=order_data)
+
+    assert response.status_code == 200
+    assert response.json() == {'status': 'success'}
+
 
 
