@@ -4,15 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('cart', '0005_alter_cartitem_price'),
-        ('books', '0002_alter_book_state'),
+        ("cart", "0005_alter_cartitem_price"),
+        ("books", "0002_alter_book_state"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='BookInstances',
-            new_name='BookInstance',
+            old_name="BookInstances",
+            new_name="BookInstance",
         ),
     ]

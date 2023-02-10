@@ -19,10 +19,7 @@ def test_cart_items_delete_after_order_creation(api_client):
     book.save()
     assert CartItem.objects.count() == 1
     url = f"/api/orders/"
-    data = {
-        "user": user.id,
-        "cart": cart.id
-    }
+    data = {"user": user.id, "cart": cart.id}
     response = api_client.post(url, data)
     assert response.status_code == status.HTTP_201_CREATED
     assert CartItem.objects.count() == 0
@@ -36,27 +33,10 @@ def test_user_can_see_their_own_orders(api_client):
     cart = user.cart
     order = OrderFactory(cart=cart, user=user)
     api_client.force_authenticate(user=user)
-    response = api_client.get('/api/orders/')
+    response = api_client.get("/api/orders/")
     assert response.status_code == status.HTTP_200_OK
     assert len(response.data) == 1
-    assert 'created_at' in response.data[0]
-    assert response.data[0]['user'] == user.id
-    assert response.data[0]['cart'] == cart.id
+    assert "created_at" in response.data[0]
+    assert response.data[0]["user"] == user.id
+    assert response.data[0]["cart"] == cart.id
 
-
-def test_send_purchase_data():
-    url = 'http://127.0.0.1:5050/purchase'
-    order_data = {
-        "order_id": 14,
-        "book_id": 5,
-        "user_id": 6,
-        "book_title": "Penny",
-        "author_name": "Loki",
-        "price": 200,
-        "create_at": "2023-02-20",
-        "publisher_id": 1
-    }
-    response = requests.post(url, json=order_data)
-
-    assert response.status_code == 200
-    assert response.json() == {'status': 'success'}
