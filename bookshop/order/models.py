@@ -1,5 +1,3 @@
-import json
-
 import requests
 from django.db import models, transaction
 
@@ -27,15 +25,16 @@ class Order(models.Model):
     def send_purchase_data(self):
         data = []
         for item in self.cart.cart_items.all():
+            authors = ", ".join([author.name for author in item.book_instance.book.author.all()])
             item_data = {
                 "order_id": self.id,
                 "book_id": item.book_instance.book.id,
                 "user_id": self.user.id,
                 "book_title": item.book_instance.book.title,
-                "author_name": item.book_instance.book.author.name,
-                "price": item.price,
-                "create_at": self.created_at,
-                "publisher_id": item.book_instance.book.publisher.id,
+                "author_name": authors,
+                "price": int(item.price),
+                "create_at": self.created_at.strftime("%Y-%m-%d"),
+                "publisher_id": item.book_instance.publisher.id,
             }
             data.append(item_data)
         print("\n\n", data)
@@ -48,18 +47,15 @@ class Order(models.Model):
                 raise ValueError("Не хватает книг в магазине")
         self.total_price = self.calculate_total_price()
         super().save(*args, **kwargs)
+        self.send_purchase_data()
         for item in self.cart.cart_items.all():
             item.book_instance.count -= item.count
             item.book_instance.save()
             item.delete()
         self.cart.cart_items.all().delete()
         self.cart.update_total_price()
-        self.send_purchase_data()
         self.cart.save()
 
     class Meta:
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
-
-
-

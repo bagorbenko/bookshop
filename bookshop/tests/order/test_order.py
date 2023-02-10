@@ -1,7 +1,8 @@
 import pytest
 from rest_framework import status
+import requests
 
-from cart.models import CartItem, Cart
+from cart.models import CartItem
 from order.models import Order
 from tests.factories import BookInstanceFactory
 from tests.factories import UserFactory, CartItemFactory, OrderFactory
@@ -42,8 +43,6 @@ def test_user_can_see_their_own_orders(api_client):
     assert response.data[0]['user'] == user.id
     assert response.data[0]['cart'] == cart.id
 
-import requests
-import pytest
 
 def test_send_purchase_data():
     url = 'http://127.0.0.1:5050/purchase'
@@ -61,6 +60,3 @@ def test_send_purchase_data():
 
     assert response.status_code == 200
     assert response.json() == {'status': 'success'}
-
-
-

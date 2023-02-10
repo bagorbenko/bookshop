@@ -1,5 +1,4 @@
-from books.views import (AuthorAPIView, BookAPIView, BookInstanceAPIView,
-                         CategoryAPIView, GenreAPIView, PublisherAPIView)
+from books.views import (AuthorAPIView, BookAPIView, CategoryAPIView, GenreAPIView, PublisherAPIView)
 from cart.views import CartAPIView, CartItemAPIView
 from django.contrib import admin
 from django.urls import include, path, re_path

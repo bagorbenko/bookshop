@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import *
+from .models import Author, Book, BookInstance, Publisher, Genre, Category
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -32,7 +32,6 @@ class BookSerializer(serializers.ModelSerializer):
         for book_instances in instance.book_instances.all():
             result += book_instances.count
         return result
-
 
     class Meta:
         model = Book
