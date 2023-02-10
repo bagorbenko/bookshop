@@ -1,6 +1,7 @@
 import pytest
 from books.models import Book, BookInstance
-from tests.factories import CategoryFactory, GenreFactory, AuthorFactory, PublisherFactory, BookFactory, BookInstanceFactory
+from tests.factories import CategoryFactory, GenreFactory, AuthorFactory, PublisherFactory, BookFactory, \
+    BookInstanceFactory
 
 
 @pytest.mark.django_db
