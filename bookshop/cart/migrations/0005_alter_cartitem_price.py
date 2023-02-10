@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('cart', '0004_alter_cart_total_price'),
+        ("cart", "0004_alter_cart_total_price"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='cartitem',
-            name='price',
-            field=models.DecimalField(decimal_places=2, default=0, editable=False, max_digits=10),
+            model_name="cartitem",
+            name="price",
+            field=models.DecimalField(
+                decimal_places=2, default=0, editable=False, max_digits=10
+            ),
         ),
     ]

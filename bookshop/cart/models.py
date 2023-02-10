@@ -8,10 +8,16 @@ from django.dispatch import receiver
 
 
 class CartItem(models.Model):
-    book_instance = models.ForeignKey(BookInstance, on_delete=models.CASCADE, related_name="book_instance")
-    cart = models.ForeignKey('Cart', on_delete=models.CASCADE, related_name="cart_items")
+    book_instance = models.ForeignKey(
+        BookInstance, on_delete=models.CASCADE, related_name="book_instance"
+    )
+    cart = models.ForeignKey(
+        "Cart", on_delete=models.CASCADE, related_name="cart_items"
+    )
     count = models.IntegerField()
-    price = models.DecimalField(decimal_places=2, max_digits=10, default=0, editable=False)
+    price = models.DecimalField(
+        decimal_places=2, max_digits=10, default=0, editable=False
+    )
 
     def get_total_price(self):
         self.price = self.book_instance.price * self.count
@@ -25,14 +31,18 @@ class CartItem(models.Model):
         self.cart.update_total_price()
 
     def __str__(self):
-        return f'{self.count} шт. книги {self.book_instance.book.title} по цене {self.price}'
+        return f"{self.count} шт. книги {self.book_instance.book.title} по цене {self.price}"
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True, related_name='cart')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, unique=True, related_name="cart"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    total_price = models.DecimalField(decimal_places=2, max_digits=10, default=0, editable=False)
+    total_price = models.DecimalField(
+        decimal_places=2, max_digits=10, default=0, editable=False
+    )
 
     def total_items(self):
         return self.cart_items.count()
@@ -45,7 +55,7 @@ class Cart(models.Model):
         self.save()
 
     def __str__(self):
-        return f'Корзина пользователя {self.user.username}'
+        return f"Корзина пользователя {self.user.username}"
 
     class Meta:
         verbose_name = "Корзина"

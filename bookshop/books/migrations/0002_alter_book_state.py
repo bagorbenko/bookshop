@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('books', '0001_initial'),
+        ("books", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='book',
-            name='state',
-            field=models.CharField(choices=[('N', 'Новая'), ('U', 'Б.У.')], default='N', max_length=2),
+            model_name="book",
+            name="state",
+            field=models.CharField(
+                choices=[("N", "Новая"), ("U", "Б.У.")], default="N", max_length=2
+            ),
         ),
     ]

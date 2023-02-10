@@ -15,15 +15,17 @@ class PublisherSerializer(serializers.ModelSerializer):
 
 
 class BookInstanceSerializer(serializers.ModelSerializer):
-    publisher = serializers.CharField(source='publisher.name')
+    publisher = serializers.CharField(source="publisher.name")
 
     class Meta:
         model = BookInstance
-        fields = ('publisher', 'count')
+        fields = ("publisher", "count")
 
 
 class BookSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(queryset=Author.objects.all(), many=True)
+    author = serializers.PrimaryKeyRelatedField(
+        queryset=Author.objects.all(), many=True
+    )
     book_instances = BookInstanceSerializer(many=True, read_only=True)
     total_amount = serializers.SerializerMethodField()
 
@@ -35,7 +37,15 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ('id', 'title', 'author', 'genres', 'category', 'book_instances', 'total_amount')
+        fields = (
+            "id",
+            "title",
+            "author",
+            "genres",
+            "category",
+            "book_instances",
+            "total_amount",
+        )
 
 
 class PriceSerializer(serializers.ModelSerializer):
@@ -43,7 +53,10 @@ class PriceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BookInstance
-        fields = ("book", "price",)
+        fields = (
+            "book",
+            "price",
+        )
 
 
 class GenreSerializer(serializers.ModelSerializer):

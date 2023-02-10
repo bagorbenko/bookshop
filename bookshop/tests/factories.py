@@ -16,8 +16,8 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
-    username = factory.Faker('user_name')
-    email = factory.Faker('email')
+    username = factory.Faker("user_name")
+    email = factory.Faker("email")
 
 
 class GenreFactory(factory.django.DjangoModelFactory):
@@ -51,7 +51,9 @@ class BookFactory(factory.django.DjangoModelFactory):
     title = factory.LazyAttribute(lambda o: fake.word())
     isbn = factory.LazyAttribute(lambda o: fake.pyint())
     summary = factory.LazyAttribute(lambda o: fake.text())
-    pages_count = factory.LazyAttribute(lambda o: fake.random_int(min=100, max=500, step=1))
+    pages_count = factory.LazyAttribute(
+        lambda o: fake.random_int(min=100, max=500, step=1)
+    )
 
     @factory.post_generation
     def genres(self, create, extracted, **kwargs):
@@ -94,6 +96,7 @@ class BookInstanceFactory(factory.django.DjangoModelFactory):
 class CartFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Cart
+
     user = factory.SubFactory(UserFactory)
 
 
@@ -103,7 +106,7 @@ class CartItemFactory(factory.django.DjangoModelFactory):
 
     cart = factory.SubFactory(CartFactory)
     book_instance = factory.SubFactory(BookInstanceFactory)
-    count = factory.Faker('random_int', min=1, max=5)
+    count = factory.Faker("random_int", min=1, max=5)
 
 
 class OrderFactory(factory.django.DjangoModelFactory):

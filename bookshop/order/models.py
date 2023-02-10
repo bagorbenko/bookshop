@@ -6,14 +6,16 @@ from user.models import User
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='order')
-    total_price = models.DecimalField(decimal_places=2, max_digits=10, default=0, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="order")
+    total_price = models.DecimalField(
+        decimal_places=2, max_digits=10, default=0, editable=False
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'Заказ {self.pk} для пользователя {self.user.first_name}'
+        return f"Заказ {self.pk} для пользователя {self.user.first_name}"
 
     def calculate_total_price(self):
         items = self.cart.cart_items.all()
@@ -25,7 +27,9 @@ class Order(models.Model):
     def send_purchase_data(self):
         data = []
         for item in self.cart.cart_items.all():
-            authors = ", ".join([author.name for author in item.book_instance.book.author.all()])
+            authors = ", ".join(
+                [author.name for author in item.book_instance.book.author.all()]
+            )
             item_data = {
                 "order_id": self.id,
                 "book_id": item.book_instance.book.id,
@@ -40,21 +44,26 @@ class Order(models.Model):
         print("\n\n", data)
         requests.post("http://127.0.0.1:5050/purchases/", json=data)
 
-    @transaction.atomic
-    def save(self, *args, **kwargs):
+    def check_book_availability(self):
         for item in self.cart.cart_items.all():
             if item.book_instance.count < item.count:
                 raise ValueError("Не хватает книг в магазине")
-        self.total_price = self.calculate_total_price()
-        super().save(*args, **kwargs)
-        self.send_purchase_data()
+
+    def remove_book_instances(self):
         for item in self.cart.cart_items.all():
             item.book_instance.count -= item.count
             item.book_instance.save()
             item.delete()
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        self.check_book_availability()
+        self.total_price = self.calculate_total_price()
+        super().save(*args, **kwargs)
+        self.send_purchase_data()
+        self.remove_book_instances()
         self.cart.cart_items.all().delete()
         self.cart.update_total_price()
-        self.cart.save()
 
     class Meta:
         verbose_name = "Заказ"

@@ -20,7 +20,7 @@ def user_data():
         "password2": "testpassword",
         "email": "testuser@example.com",
         "first_name": "Don",
-        "last_name": "Joe"
+        "last_name": "Joe",
     }
 
 
@@ -42,7 +42,7 @@ def book_data():
 def cart_data():
     return {
         "user": User.objects.create(username="testuser", email="test@example.com"),
-        "total_price": 100.00
+        "total_price": 100.00,
     }
 
 
@@ -52,7 +52,7 @@ def cart_item_data(cart_data, book_instance_data):
         "book_instance": book_instance_data,
         "cart": cart_data,
         "count": 2,
-        "price": book_instance_data.price * 2
+        "price": book_instance_data.price * 2,
     }
 
 
@@ -86,7 +86,11 @@ def create_objects():
     genre = Genre.objects.create(name="genre1", description="description1")
     author = Author.objects.create(name="author1", biography="biography1")
     publisher = Publisher.objects.create(name="publisher1", description="description1")
-    book = Book.objects.create(title="book1", category=category, isbn="1234567890123", pages_count=100)
+    book = Book.objects.create(
+        title="book1", category=category, isbn="1234567890123", pages_count=100
+    )
     book.genres.add(genre)
     book.author.add(author)
-    book_instance = BookInstance.objects.create(book=book, publisher=publisher, price=10, count=5)
+    book_instance = BookInstance.objects.create(
+        book=book, publisher=publisher, price=10, count=5
+    )

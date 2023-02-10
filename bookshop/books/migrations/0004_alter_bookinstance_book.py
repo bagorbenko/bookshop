@@ -5,15 +5,20 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('books', '0003_rename_bookinstances_bookinstance'),
+        ("books", "0003_rename_bookinstances_bookinstance"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='bookinstance',
-            name='book',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='book_instances', to='books.book', verbose_name='Книга'),
+            model_name="bookinstance",
+            name="book",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="book_instances",
+                to="books.book",
+                verbose_name="Книга",
+            ),
         ),
     ]
