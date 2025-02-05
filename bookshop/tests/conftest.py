@@ -1,3 +1,9 @@
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bookshop.settings")
+
+import django
+django.setup()
+
 import pytest
 from rest_framework.test import APIClient
 
@@ -94,3 +100,12 @@ def create_objects():
     book_instance = BookInstance.objects.create(
         book=book, publisher=publisher, price=10, count=5
     )
+    # Возвращаем созданные объекты для использования в тестах, если необходимо
+    return {
+        "category": category,
+        "genre": genre,
+        "author": author,
+        "publisher": publisher,
+        "book": book,
+        "book_instance": book_instance,
+    }
