@@ -42,7 +42,7 @@ class Order(models.Model):
             }
             data.append(item_data)
         print("\n\n", data)
-        requests.post("http://127.0.0.1:5050/purchases/", json=data)
+        # requests.post("http://127.0.0.1:5050/purchases/", json=data)
 
     def check_book_availability(self):
         for item in self.cart.cart_items.all():
